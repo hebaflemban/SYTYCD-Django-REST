@@ -1,13 +1,12 @@
 from datetime import datetime
-
 from rest_framework import serializers
-
+from django.contrib.auth.models import User
 from .models import Hotel, Booking
 
 
 class HotelsListSerializer(serializers.ModelSerializer):
 	details = serializers.HyperlinkedIdentityField(
-		view_name = "hotel-detail",
+		view_name = "hotel-details",
 		lookup_field = "id",
 		lookup_url_kwarg = "hotel_id"
 		)
@@ -24,7 +23,7 @@ class HotelDetailsSerializer(serializers.ModelSerializer):
 		)
 	class Meta:
 		model = Hotel
-		fields = ["name", "location", "price", "book"]
+		fields = ["name", "location", "price_per_night", "book"]
 
 
 class BookHotelSerializer(serializers.ModelSerializer):
@@ -74,17 +73,15 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class UserCreateSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True)
-    class Meta:
-        model = User
-        fields = ['username', 'password']
+	password = serializers.CharField(write_only=True)
+	class Meta:
+		model = User
+		fields = ['username', 'password']
 
-    def create(self, validated_data):
-        username = validated_data['username']
-        password = validated_data['password']
-        new_user = User(username=username)
-        new_user.save()
-        return validated_data
-
-
-
+	def create(self, validated_data):
+		username = validated_data['username']
+		password = validated_data['password']
+		new_user = User(username=username)
+		new_user.set_password(password)
+		new_user.save()
+		return validated_data
