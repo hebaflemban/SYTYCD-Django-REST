@@ -8,7 +8,7 @@ class Hotel(models.Model):
 	price_per_night = models.DecimalField(max_digits=10, decimal_places=3)
 
 	def __str__(self):
-		return name
+		return self.name
 
 
 class Booking(models.Model):
@@ -18,4 +18,4 @@ class Booking(models.Model):
 	number_of_nights = models.PositiveIntegerField()
 
 	def __str__(self):
-		return "%s in %s" % (str(self.user), self.hotel.name)
+		return "%s %s in %s" % (str(self.id), str(self.user), self.hotel.name)
